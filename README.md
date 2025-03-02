@@ -16,7 +16,9 @@ This project focuses on classifying garbage items into different categories usin
    git clone <repository-url>
    cd multimodal-garbage-classification-master
 2. Install the requirements
+    ```sh
    pip install -r requirements.txt
 
-3. To train the model
+4. To train the model
+   ```sh
     python train.py
