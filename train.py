@@ -1,4 +1,4 @@
-from load_data import dataloader
+from dataloader import *
 from torch.utils.data import DataLoader
 import clip
 from tqdm import tqdm
@@ -12,13 +12,18 @@ import clip
 device = 'cuda'
 LABELS = ["Black", "Blue", "Green", "TTR"] 
 
-train_data = dataloader.GarbageDataset('/home/tejas/Desktop/ENEL 645/Assignment_2/garbage_data', 'CVPR_2024_dataset_Train')
-val_data = dataloader.GarbageDataset('/home/tejas/Desktop/ENEL 645/Assignment_2/garbage_data', 'CVPR_2024_dataset_Val')
-test_data = dataloader.GarbageDataset('/home/tejas/Desktop/ENEL 645/Assignment_2/garbage_data', 'CVPR_2024_dataset_Test')
+# Loading the datasets
+train_data = GarbageDataset('/home/tejas.pote/fine_tune/garbage_data', 'Train')
+val_data = GarbageDataset('/home/tejas.pote/fine_tune/garbage_data', 'Val')
+test_data = GarbageDataset('/home/tejas.pote/fine_tune/garbage_data', 'Test')
 
+# Creating the loaders 
 train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
 val_loader = DataLoader(val_data, batch_size=64, shuffle=False)
 test_loader = DataLoader(test_data, batch_size=64, shuffle=False)
+
+
+# Classifier model built by adding a linear classifier layer over a pre-trained CLIP model
 
 class GarbageClassifier(nn.Module):
     def __init__(self, num_classes):
@@ -34,12 +39,15 @@ class GarbageClassifier(nn.Module):
         combined_features = image_features + text_features
         return self.classifier(combined_features)
 
-
+# Creating an instance of the model
 model = GarbageClassifier(num_classes=len(LABELS)).to(device)   
 
+# Initializing the optimizer parameters
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
+
+# Defining the train and validate functions
 
 def train(model, train_loader, criterion, optimizer, epoch):
     model.train()
@@ -87,11 +95,14 @@ def validate(model, val_loader, criterion):
     accuracy = 100 * correct / total
     return total_loss / len(val_loader), accuracy
 
-num_epochs = 50
+# Initializing the training loop configuration 
+
+num_epochs = 2
 patience = 5
 best_val_loss = float('inf')
 counter = 0
 
+# Training Loop
 for epoch in range(1, num_epochs + 1):
     train_loss, train_acc = train(model, train_loader, criterion, optimizer, epoch)
     val_loss, val_acc = validate(model, val_loader, criterion)

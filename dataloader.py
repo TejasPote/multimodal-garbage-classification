@@ -27,6 +27,8 @@ def clean_text(filename):
     filename = filename.replace(".png", "").replace(".jpg", "").replace(".jpeg", "")  # Remove extensions
     return filename.strip()
 
+# Class for custom dataset
+
 class GarbageDataset(Dataset):
     def __init__(self, root_dir, split):
         self.image_paths = []
