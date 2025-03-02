@@ -1,0 +1,6 @@
+openai-clip
+datasets
+torch
+tqdm
+pillow
+torchvision 
