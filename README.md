@@ -1,24 +1,68 @@
 # Multimodal Garbage Classification
 
-## Overview
-This project focuses on classifying garbage items into different categories using a multimodal approach. The classification model helps in proper waste disposal by sorting items into predefined bins.
+## Project Overview
+This project focuses on classifying garbage items into four categories (Black, Blue, Green, and TTR) using a multimodal deep learning approach. The model combines image and text information extracted from filenames to enhance classification accuracy. The system utilizes a vision encoder (ResNet-50) and a text encoder (DistilBERT), fusing their features before passing them through a classification layer.
 
-## Features
-- Uses a pre-trained CLIP model for classification.
-- Custom data preprocessing pipeline to clean and structure data.
-- Supports training, validation, and testing datasets.
-- Includes SLURM scripts for running on high-performance clusters.
+## Methodology
+The approach involves:
+1. **Data Preprocessing**: Cleaning text from filenames and applying image transformations.
+2. **Multimodal Model**: A neural network integrating a ResNet-50 for image encoding and DistilBERT for text encoding.
+3. **Training**: Fine-tuning the model using cross-entropy loss and the AdamW optimizer.
+4. **Evaluation**: Performance assessment using accuracy, confusion matrices, and ROC-AUC curves.
+5. **Analysis**: Examining incorrect predictions and model biases.
 
-## Installation
+## Repository Structure
+```
+multimodal-garbage-classification/
+│── data.py               # Dataset handling and preprocessing
+│── model.py              # Model architecture definition
+│── train.py              # Training script
+│── test.py               # Model evaluation script
+│── requirements.txt      # List of dependencies
+│── README.md             # Project documentation
+```
 
-1. Clone the repository:
-   ```sh
-   git clone <repository-url>
-   cd multimodal-garbage-classification-master
-2. Install the requirements
-    ```sh
-   pip install -r requirements.txt
+## Steps to Reproduce
 
-4. To train the model
-   ```sh
-    python train.py
+### 1. Set Up the Environment
+Ensure you have Python 3.8+ and create a virtual environment:
+```bash
+python -m venv env
+source env/bin/activate   # On Windows: env\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 2. Prepare the Dataset
+Structure your dataset as follows:
+```
+dataset/
+│── Train/
+│   ├── black/
+│   ├── blue/
+│   ├── green/
+│   ├── ttr/
+│── Val/
+│   ├── black/
+│   ├── blue/
+│   ├── green/
+│   ├── ttr/
+│── Test/
+│   ├── black/
+│   ├── blue/
+│   ├── green/
+│   ├── ttr/
+```
+
+### 3. Train the Model
+Run the training script with the required arguments:
+```bash
+python train.py --train_dir dataset/Train --val_dir dataset/Val \
+                --epochs 10 --batch_size 32 --learning_rate 2e-5 \
+                --checkpoint_dir checkpoints/
+```
+
+### 4. Evaluate the Model
+After training, test the model using:
+```bash
+python test.py --test_dir dataset/Test --checkpoint_path checkpoints/best_model.pth
+```
