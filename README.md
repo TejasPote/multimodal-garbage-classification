@@ -17,7 +17,6 @@ multimodal-garbage-classification/
 │── data.py               # Dataset handling and preprocessing
 │── model.py              # Model architecture definition
 │── train.py              # Training script
-│── test.py               # Model evaluation script
 │── requirements.txt      # List of dependencies
 │── README.md             # Project documentation
 ```
@@ -61,8 +60,3 @@ python train.py --train_dir dataset/Train --val_dir dataset/Val \
                 --checkpoint_dir checkpoints/
 ```
 
-### 4. Evaluate the Model
-After training, test the model using:
-```bash
-python test.py --test_dir dataset/Test --checkpoint_path checkpoints/best_model.pth
-```
