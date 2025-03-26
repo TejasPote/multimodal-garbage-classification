@@ -1,15 +1,15 @@
 #!/bin/bash
 ####### ARC #############
-#SBATCH --job-name=fairgrape                  # Job name
+#SBATCH --job-name=multimodal-classification                  # Job name
 #SBATCH --partition=gpu-a100                        # Partition name
 #SBATCH --mem=200G                            # Memory total in MB (for all cores)
 #SBATCH --time=1-00:00:00                     # Time limit hrs:min:sec
 #SBATCH --gres=gpu:1                          # Request GPU resource
-#SBATCH --output=clip_fine_tune.log            # Standard output and error log
+#SBATCH --output=fine_tune.log            # Standard output and error log
 
 ####### Load necessary modules #############
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate clip_fine_tune
+conda activate env
 
 ####### Run the script #############
 sh ../scripts/train_script.sh
