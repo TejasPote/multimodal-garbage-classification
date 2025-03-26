@@ -15,6 +15,7 @@ class MultiModalClassifier(nn.Module):
 
         # Vision Encoder (ResNet-50)
         self.resnet = models.resnet50(pretrained=True)  # Pretrained ResNet-50
+        self.vision_feature_size = self.resnet.fc.in_features  # Size of ResNet's feature space before the classification head
         self.resnet.fc = nn.Identity()  # Remove classification head, to use the features
 
         # Text Encoder (DistilBERT)
@@ -22,7 +23,7 @@ class MultiModalClassifier(nn.Module):
         self.text_fc = nn.Linear(self.bert.config.hidden_size, 512)  # Reduce to 512-d features
 
         # Fusion Layer: Concatenate image and text features and pass through a fully connected layer
-        self.fusion_fc = nn.Linear(2048 + 512, 1024)  # Image + Text feature size
+        self.fusion_fc = nn.Linear(self.vision_feature_size + 512, 1024)  # Image + Text feature size
         self.relu = nn.ReLU()  # Non-linearity
         self.dropout = nn.Dropout(0.3)  # Dropout for regularization
 
